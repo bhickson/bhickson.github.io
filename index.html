@@ -1,36 +1,59 @@
 <!DOCTYPE html>
 <script src="http://cdn.leafletjs.com/leaflet/v1.0.0-beta.2/leaflet.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.3/dist/leaflet.css" />
 <script>
-	var map = new L.map('map'.setView([32.815,-111.26],13);
-	
-	var mapBox_Dark  = L.tileLayer(mapBoxUrl, {
-			id: 'mapbox.dark',   attribution: mapBoxAttr
-		}).addTo(map);
+	$(document).ready(function() {
+		var map = L.map('map').setView([33,-111.26],9);
+		 
+		var mapBoxUrl = 'https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token=pk.eyJ1IjoiYmhpY2tzb24iLCJhIjoiY2lqb25jazdqMDB1OHRobTVwcWZlbGl0NyJ9.CPm_-v_36RGkZMV-5Un2sg';
 		
-	var mapBox_Streets  = L.tileLayer(mapBoxUrl, {
-			id: 'mapbox.streets',   attribution: mapBoxAttr
+		var mapBoxAttr = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' + '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' + 'Imagery © <a href="http://mapbox.com">Mapbox</a>';
+		
+		var mapBox_Dark  = L.tileLayer(mapBoxUrl, {
+				id: 'mapbox.dark',
+				attribution: mapBoxAttr
+			}).setZIndex(1);
+		mapBox_Dark.addTo(map);
+			
+		var mapBox_Streets  = L.tileLayer(mapBoxUrl, {
+				id: 'mapbox.streets',   attribution: mapBoxAttr
+			})//.addTo(map).setZIndex(1);
+			
+		baseMaps = {"MapBox Dark":    mapBox_Dark,
+					"MapBox Streets": mapBox_Streets}
+			
+		var baseSelect = new L.control.layers(baseMaps).addTo(map)
+		
+		url = "https://geo.library.arizona.edu/geoserver/ows?"
+		counties_layer = L.tileLayer.wms(url, {
+			layers: "UniversityLibrary:Arizona_Counties",
+			format:"image/png",
+			transparent: true,
+			version: '1.1.0',
+			tiled: true
 		});
-	baseMaps = {"MapBox Dark": mapBox_Dark,
-				"MapBox Streets": mapBox_Streets}
+		counties_layer.addTo(map).setZIndex(10)
 		
-	var baseSelect = new L.control.layers(baseMaps)
-	
-	url = "http://geo.library.arizona.edu/geoserver/wms"
-	riparian_layer = L.tileLayer.wms(url, {
-		layers: "tempWorkspace:PinalCounty_CARTOutput,"
-		format:"image/png",
-		transparent: true,
-		version: '1.1.0',
+		riparian_layer = L.tileLayer.wms(url, {
+			layers: "tempWorkspace:PinalCountynewRiparianMosaic",
+			format:"image/png",
+			transparent: true,
+			version: '1.1.0',
+			tiled: true
+		});
+		riparian_layer.addTo(map).setZIndex(11)
 	})
 </script>
 <style>
 	#map {
-		height: 300px;
+		height: 500px;
+		width: 100%;
+		min-width: 500px;
 	}
 </style>
 <html>
-	<body
+	<body>
 		<div id="map"></div>
 	</body>
 </html>
