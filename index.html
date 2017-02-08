@@ -15,14 +15,18 @@
 				id: 'mapbox.dark',
 				attribution: mapBoxAttr
 			}).setZIndex(1);
-		mapBox_Dark.addTo(map);
-			
+					
 		var mapBox_Streets  = L.tileLayer(mapBoxUrl, {
 				id: 'mapbox.streets',   attribution: mapBoxAttr
-			})//.addTo(map).setZIndex(1);
+			})
+			
+		var esri_WorldImagery = L.tileLayer('http://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+			attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+		}).addTo(map);
 			
 		baseMaps = {"MapBox Dark":    mapBox_Dark,
-					"MapBox Streets": mapBox_Streets}
+					"MapBox Streets": mapBox_Streets,
+					"Esri Imagery" : esri_WorldImagery}
 			
 		var baseSelect = new L.control.layers(baseMaps).addTo(map)
 		
@@ -41,7 +45,8 @@
 			format:"image/png",
 			transparent: true,
 			version: '1.1.0',
-			tiled: true
+			tiled: true,
+			opacity: 0.75
 		});
 		riparian_layer.addTo(map).setZIndex(11)
 		
